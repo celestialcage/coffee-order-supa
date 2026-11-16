@@ -1,0 +1,459 @@
+/* 와이어프레임의 톤을 그대로 옮긴 토큰. 다크모드 자동 대응 */
+:root {
+  --bg: #f7f7f5;
+  --surface-1: #efefec;
+  --surface-2: #ffffff;
+  --border: #e2e2dd;
+  --border-strong: #b9b9b2;
+  --text: #1f1f1d;
+  --text-secondary: #5f5f5a;
+  --text-muted: #8c8c86;
+  --accent: #2f6fde;
+  --bg-accent: #e8f0fd;
+  --text-accent: #1f56b8;
+  --success: #1f8a4c;
+  --warning: #a8620b;
+  --bg-warning: #fdf3e2;
+  --danger: #c93a32;
+  --bg-danger: #fdecea;
+  --primary: #1f1f1d;
+  --on-primary: #ffffff;
+  --radius: 8px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #161615;
+    --surface-1: #1e1e1d;
+    --surface-2: #252524;
+    --border: #353533;
+    --border-strong: #55554f;
+    --text: #ededea;
+    --text-secondary: #b3b3ad;
+    --text-muted: #85857f;
+    --accent: #6b9cf0;
+    --bg-accent: #1d2b44;
+    --text-accent: #9cbcf5;
+    --success: #5cc78a;
+    --warning: #e3a54f;
+    --bg-warning: #3a2c16;
+    --danger: #f07a72;
+    --bg-danger: #3d1f1d;
+    --primary: #ededea;
+    --on-primary: #161615;
+    color-scheme: dark;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+}
+body {
+  font-family:
+    "Pretendard",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Apple SD Gothic Neo",
+    "Malgun Gothic",
+    sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.5;
+}
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+button {
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  padding: 9px 14px;
+  cursor: pointer;
+}
+button:hover:not(:disabled) {
+  background: var(--surface-1);
+}
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+button.primary {
+  background: var(--primary);
+  color: var(--on-primary);
+  border-color: var(--primary);
+}
+button.primary:hover:not(:disabled) {
+  opacity: 0.88;
+  background: var(--primary);
+}
+button.danger {
+  background: var(--danger);
+  color: #fff;
+  border-color: var(--danger);
+}
+button.danger:hover:not(:disabled) {
+  opacity: 0.88;
+  background: var(--danger);
+}
+button.ghost {
+  background: transparent;
+  border-color: transparent;
+  padding: 4px 6px;
+  color: var(--text-secondary);
+}
+button.ghost:hover:not(:disabled) {
+  background: var(--surface-1);
+}
+button.small {
+  padding: 6px 10px;
+  font-size: 12px;
+}
+button.block {
+  width: 100%;
+}
+
+input[type="text"],
+input[type="search"],
+select,
+textarea {
+  width: 100%;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 9px 10px;
+}
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+  border-color: transparent;
+}
+textarea {
+  resize: vertical;
+}
+
+.label {
+  display: block;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+.field {
+  margin-bottom: 14px;
+}
+.muted {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+.secondary {
+  color: var(--text-secondary);
+}
+.error-text {
+  color: var(--danger);
+  font-size: 13px;
+}
+.center {
+  text-align: center;
+}
+
+/* 참여자: 모바일 카드 레이아웃 */
+.phone-wrap {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 24px 16px;
+}
+.phone {
+  width: 100%;
+  max-width: 420px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  align-self: flex-start;
+  position: relative;
+}
+.phone-title {
+  font-size: 17px;
+  font-weight: 600;
+  margin: 2px 0 18px;
+}
+
+/* 총대: 넓은 레이아웃 */
+.page {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 24px 16px 64px;
+}
+.page-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.page-head h1 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.panel {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+}
+.section-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.card {
+  background: var(--surface-1);
+  border: 2px solid transparent;
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  text-align: left;
+}
+.card:hover:not(:disabled) {
+  background: var(--surface-1);
+  border-color: var(--border-strong);
+}
+.card.active {
+  border-color: var(--accent);
+}
+.card .num {
+  font-size: 24px;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.table th {
+  text-align: left;
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--text-muted);
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+}
+.table td {
+  padding: 9px 10px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  vertical-align: middle;
+}
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.badge {
+  display: inline-block;
+  font-size: 11px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--surface-1);
+  color: var(--text-secondary);
+  margin-left: 6px;
+}
+.badge.warn {
+  background: var(--bg-warning);
+  color: var(--warning);
+}
+.badge.danger {
+  background: var(--bg-danger);
+  color: var(--danger);
+}
+.badge.ok {
+  background: var(--bg-accent);
+  color: var(--text-accent);
+}
+
+.notice {
+  border-radius: var(--radius);
+  padding: 9px 11px;
+  font-size: 12px;
+}
+.notice.warn {
+  background: var(--bg-warning);
+  color: var(--warning);
+}
+.notice.danger {
+  background: var(--bg-danger);
+  color: var(--danger);
+}
+.notice.info {
+  background: var(--bg-accent);
+  color: var(--text-accent);
+}
+
+/* 자동완성 */
+.ac-list {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-top: 4px;
+  overflow: hidden;
+  max-height: 240px;
+  overflow-y: auto;
+}
+.ac-item {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  text-align: left;
+  border: none;
+  border-radius: 0;
+  border-top: 1px solid var(--border);
+  padding: 10px 12px;
+  background: var(--surface-2);
+}
+.ac-item:first-child {
+  border-top: none;
+}
+.ac-item.selected {
+  background: var(--bg-accent);
+  color: var(--text-accent);
+}
+
+/* PIN 4칸 */
+.pin {
+  position: relative;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 4px 0 20px;
+}
+.pin-box {
+  width: 44px;
+  height: 48px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+.pin-box.filled {
+  border-color: var(--border-strong);
+}
+.pin-box.cursor {
+  border-color: var(--accent);
+}
+.pin input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: text;
+}
+.pin.disabled .pin-box {
+  background: var(--surface-1);
+}
+
+.back {
+  position: absolute;
+  top: 16px;
+  left: 12px;
+}
+
+/* 모달 */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 10;
+}
+.modal {
+  background: var(--surface-2);
+  border-radius: 12px;
+  padding: 18px;
+  width: 100%;
+  max-width: 360px;
+}
+.modal-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+.modal-actions button {
+  flex: 1;
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.row-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.order-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  margin-bottom: 12px;
+}
+
+@media (max-width: 760px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+  .cards {
+    gap: 8px;
+  }
+  .card {
+    padding: 10px 12px;
+  }
+  .card .num {
+    font-size: 20px;
+  }
+}
