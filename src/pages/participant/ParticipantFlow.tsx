@@ -64,6 +64,25 @@ export default function ParticipantFlow() {
   const menuName = (id: string | null) =>
     event.menu.find((m) => m.id === id)?.name ?? "알 수 없는 메뉴";
 
+  // 명단의 has_pin은 내 제출이나 다른 사람의 제출로 계속 바뀐다.
+  // 페이지를 처음 열 때 받은 값을 계속 쓰면 안 되므로, 이름을 고를 때마다 새로 받아온다.
+  const selectMember = async (m: PublicMember) => {
+    let fresh = m;
+    try {
+      const e = await getEventPublic(eventId);
+      if (e) {
+        setEvent(e);
+        setClosed(e.closed);
+        fresh = e.members.find((x) => x.id === m.id) ?? m;
+      }
+    } catch {
+      // 실패하면 기존 정보로 진행 (제출할 때 서버가 다시 검증한다)
+    }
+    setMember(fresh);
+    setPin("");
+    setStep("pin");
+  };
+
   const resetToName = () => {
     setStep("name");
     setMember(null);
@@ -74,16 +93,7 @@ export default function ParticipantFlow() {
 
   return (
     <Shell>
-      {step === "name" && (
-        <NameStep
-          event={event}
-          onNext={(m) => {
-            setMember(m);
-            setPin("");
-            setStep("pin");
-          }}
-        />
-      )}
+      {step === "name" && <NameStep event={event} onNext={selectMember} />}
 
       {step === "pin" && member && (
         <PinStep
@@ -119,8 +129,10 @@ export default function ParticipantFlow() {
           onClosed={() => setClosed(true)}
           onSubmitted={(o) => {
             setOrder(o);
+            setMember({ ...member, has_pin: true }); // 방금 제출로 PIN이 설정됨
             setStep("done");
           }}
+          onPinRejected={() => selectMember(member)}
           onBack={order ? () => setStep("done") : undefined}
         />
       )}
@@ -278,6 +290,9 @@ function PinStep({
       const res = await getMyOrder(member.id, pin);
       if (res.ok) {
         onVerified({ closed: res.closed, order: res.order });
+      } else if (res.error === "unset") {
+        // 총대가 그 사이 PIN을 초기화한 경우 → 지금 입력한 PIN을 새 PIN으로 사용
+        onNewPin();
       } else {
         if (res.error === "locked") setLocked(true);
         setError(ERROR_MESSAGE[res.error]);
@@ -339,6 +354,7 @@ function MenuStep({
   setDraft,
   onSubmitted,
   onClosed,
+  onPinRejected, // 추가
   onBack,
 }: {
   event: PublicEvent;
@@ -348,6 +364,7 @@ function MenuStep({
   setDraft: (d: OrderDraft) => void;
   onSubmitted: (o: Order) => void;
   onClosed: () => void;
+  onPinRejected: () => void; // 추가
   onBack?: () => void;
 }) {
   const [error, setError] = useState<string | null>(null);
@@ -370,6 +387,11 @@ function MenuStep({
           memo: draft.memo.trim() || null,
         });
       } else {
+        // 그 사이 다른 사람이 이 이름으로 PIN을 먼저 설정한 경우 → PIN 입력 화면으로
+        if (res.error === "wrong_pin" || res.error === "locked") {
+          onPinRejected();
+          return;
+        }
         if (res.error === "closed") onClosed(); // 작성 중에 마감된 경우
         setError(ERROR_MESSAGE[res.error]);
       }
